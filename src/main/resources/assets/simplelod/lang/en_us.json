@@ -1,0 +1,13 @@
+{
+    "simplelod.configuration.title": "SimpleLOD Config",
+    "simplelod.configuration.section.simplelod.client.toml": "SimpleLOD Config",
+    "simplelod.configuration.section.simplelod.client.toml.title": "SimpleLOD Config",
+    "simplelod.configuration.lod_render_distance": "LOD Render Distance",
+    "simplelod.configuration.lod_render_distance.tooltip": "Controls the combined render distance of vanilla and LOD chunks.\nRange: 8-128 chunks",
+    "simplelod.configuration.lod_color_provider": "LOD Color Provider",
+    "simplelod.configuration.lod_color_provider.tooltip": "Controls how the color of blocks in LODs is determined.\n- MAP_COLOR: the color is computed from the block's map color used by vanilla maps\n- PARTICLE_TEXTURE: the color is computed from the block's particle texture\n- BLOCK_MODEL: the color is computed from the block's model",
+    "simplelod.configuration.force_naive_mesher": "Force Naive Mesher",
+    "simplelod.configuration.force_naive_mesher.tooltip": "Force use of the naive mesher. Only use if the greedy meshing causes issues!",
+    "simplelod.configuration.force_naive_renderer": "Force Naive Renderer",
+    "simplelod.configuration.force_naive_renderer.tooltip": "Force use of the naive renderer. Only use if the MultiDrawIndirect renderer causes issues!"
+}

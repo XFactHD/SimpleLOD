@@ -1,0 +1,28 @@
+license="LGPL v3"
+issueTrackerURL="https://www.github.com/xfacthd/simplelod"
+
+[[mods]]
+    modId="simplelod"
+    version="${mod_version}"
+    displayName="SimpleLOD"
+    displayURL="https://www.curseforge.com/minecraft/mc-mods/simplelod"
+    iconFile="icon.png"
+    authors="XFactHD"
+    description='''Simple LOD rendering of terrain beyond the default view distance'''
+
+[[mixins]]
+    config="simplelod.mixins.json"
+
+[[dependencies.simplelod]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neo_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.simplelod]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
