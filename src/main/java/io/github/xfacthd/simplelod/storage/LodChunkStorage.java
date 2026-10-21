@@ -2,7 +2,6 @@ package io.github.xfacthd.simplelod.storage;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.logging.LogUtils;
-import io.github.xfacthd.simplelod.SimpleLOD;
 import io.github.xfacthd.simplelod.compiler.LodCompiler;
 import io.github.xfacthd.simplelod.data.LodChunk;
 import io.github.xfacthd.simplelod.data.LodSection;
@@ -12,22 +11,18 @@ import io.github.xfacthd.simplelod.debug.StorageStats;
 import io.github.xfacthd.simplelod.generator.LodGenerator;
 import io.github.xfacthd.simplelod.util.AccumulativeStopwatch;
 import io.github.xfacthd.simplelod.util.Config;
+import io.github.xfacthd.simplelod.util.PathResolver;
 import io.github.xfacthd.simplelod.util.Utils;
 import it.unimi.dsi.fastutil.longs.Long2ObjectFunction;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.ChunkTrackingView;
-import net.minecraft.util.FileUtil;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.storage.LevelResource;
-import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
@@ -35,11 +30,8 @@ import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.io.Closeable;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.Base64;
 import java.util.Objects;
-import java.util.Optional;
 
 // TODO: consider dropping regions which are fully out-of-range
 // FIXME: some chunks seem to fail to mesh on initial load
@@ -75,7 +67,7 @@ public final class LodChunkStorage implements Closeable {
 
     private LodChunkStorage(ClientLevel level) {
         this.level = level;
-        this.rootPath = resolveInstancePath().resolve(level.dimension().identifier().toDebugFileName());
+        this.rootPath = PathResolver.getStoragePath(level);
         this.minChunkY = level.getMinSectionY();
         this.maxChunkY = level.getMaxSectionY();
         this.chunkHeight = level.getSectionsCount();
@@ -284,26 +276,6 @@ public final class LodChunkStorage implements Closeable {
             return false;
         });
         return true;
-    }
-
-    private static Path resolveInstancePath() {
-        IntegratedServer spServer = Minecraft.getInstance().getSingleplayerServer();
-        if (spServer != null) {
-            return spServer.getWorldPath(LevelResource.DATA).resolve(SimpleLOD.MOD_ID);
-        }
-
-        ServerData mpServer = Optional.ofNullable(Minecraft.getInstance().gameMode)
-                .map(gameMode -> gameMode.connection.getServerData())
-                .orElse(null);
-        if (mpServer != null) {
-            String name = FileUtil.sanitizeName(mpServer.name);
-            String ip = Base64.getEncoder().encodeToString(mpServer.ip.getBytes(StandardCharsets.UTF_8));
-            return FMLPaths.GAMEDIR.get()
-                    .resolve(SimpleLOD.MOD_ID)
-                    .resolve(name + "_" + ip);
-        }
-
-        throw new IllegalStateException("Cannot determine world type (SP vs. MP)");
     }
 
     @FunctionalInterface
